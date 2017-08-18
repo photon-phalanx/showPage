@@ -15,7 +15,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import MyTitle from 'components/my-title/MyTitle'
+  import MyTitle from 'base/my-title/MyTitle'
   import Flag from 'base/flag/Flag'
   import Board from 'base/board/Board'
 
@@ -57,7 +57,7 @@
     top: 0;
     left: 50%;
     transform: translate3d(-50%, 0, 0);
-    background: url(./bg.jpg);
+    background: url(../../assets/bg.jpg);
     background-size: cover;
     .progress-bar-wrapper {
       position: absolute;
