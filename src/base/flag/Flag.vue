@@ -1,11 +1,11 @@
 <template>
-  <div class="flag" :style="{transform: calcOffsetWidth}">
+  <div class="flag" :style="{transform: calcOffsetWidth, zIndex: index}">
     <p class="id">{{detail[0]}}</p>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  const PROGRESS_WIDTH = '1250'
+  const PROGRESS_WIDTH = '1175'
   export default {
     data () {
       return {}
@@ -15,6 +15,10 @@
     props: {
       detail: {
         type: Array
+      },
+      index: {
+        type: Number,
+        default: 1
       }
     },
     methods: {},

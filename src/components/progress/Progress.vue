@@ -7,7 +7,7 @@
       <img src="./totalProgress.png" class="img"/>
       <progressing-bar class="progressing-bar"></progressing-bar>
       <div class="flag-wrapper" v-if="dataProps.length">
-        <flag class="flag" v-for="(item, index) in dataProps" :detail="item" :key="item[0]"></flag>
+        <flag class="flag" v-for="(item, index) in dataProps" :index="index" :detail="item" :key="item[0]"></flag>
       </div>
       <board v-for="(item, index) in boardList" key="item" :class="{reverse: index % 2 === 0}"
              :style="calcBoardPos(index)" :list="item" :reverseFlag="!(index % 2)"></board>
@@ -21,7 +21,7 @@
   import Flag from 'base/flag/Flag'
   import Board from 'base/board/Board'
   import ProgressingBar from 'base/progressing-bar/ProgressingBar'
-  const PROGRESS_WIDTH = '1250'
+  const PROGRESS_WIDTH = '1175'
   export default {
     data () {
       return {
@@ -35,7 +35,7 @@
     props: {},
     methods: {
       calcBoardPos (i) {
-        return {left: i * PROGRESS_WIDTH / 10 - 28 + 'px'}
+        return {left: i * PROGRESS_WIDTH / 10 + 138 + 'px'}
       },
       getProgressData () {
         setTimeout(() => {
@@ -50,7 +50,7 @@
             })
             arr.forEach((item) => {
               let progress = item[2]
-              for (let i = 1; i * 10 < progress; i++) {
+              for (let i = 1; i * 10 <= progress; i++) {
                 if (!boardList[i - 1]) boardList[i - 1] = []
                 boardList[i - 1].push(item)
               }
@@ -58,7 +58,7 @@
             this.boardList = boardList
             this.dataProps = arr
           })
-        }, 2000)
+        }, 20)
       }
     },
     components: {
@@ -87,7 +87,7 @@
       position: absolute;
       width: 100%;
       box-sizing: border-box;
-      padding: 0 20px;
+      padding: 0 50px 0 70px;
       height: 200px;
       top: 50%;
       left: 0;
@@ -98,16 +98,16 @@
       }
       .progressing-bar {
         position: absolute;
-        top: 56px;
+        top: 52px;
         width: 100%;
         box-sizing: border-box;
-        left: -10px;
-        z-index: 10;
+        left: 87px;
+        z-index: 100;
       }
       .flag {
         position: absolute;
-        top: -40px;
-        left: 42px;
+        top: -45px;
+        left: 88px;
       }
       .board {
         position: absolute;

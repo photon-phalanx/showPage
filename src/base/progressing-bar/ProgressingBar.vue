@@ -7,22 +7,30 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   export default {
     data () {
       return {
-        showWidth: 0
+        percent: 0
       }
     },
     computed: {
       calShowWidth () {
-        if (this.showWidth === 0) return 0
-        return this.showWidth + 0.5 + '%'
+        if (this.percent === 0) return 0
+        return this.percent * 1192 / 100 + 5 + 'px'
       }
     },
     mounted () {
+      this.getAverageData()
     },
-    props: {},
-    methods: {},
+    methods: {
+      getAverageData () {
+        axios.get('/api/getAverageData').then((res) => {
+          console.log(res.data)
+          this.percent = res.data.i
+        })
+      }
+    },
     components: {}
   }
 </script>
@@ -31,12 +39,11 @@
   @import "~common/scss/variable";
   @import "~common/scss/mixin";
   .progressing-bar-wrapper {
-    padding: 0 49px;
     .img-hidden-wrapper {
       overflow-x: hidden;
       .img {
         // width: 100%;
-        width: 1268px;
+        width: 1192px;
         height: auto;
       }
     }

@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="board" v-show="list.length">
+    <div class="board">
       <div class="content-wrapper" :class="{reverse: reverseFlag}">
         <div class="text-wrapper" :style="{transform: scrollOffset}">
           <div class="text" v-for="(item, index) in list">{{item[1]}}</div>
