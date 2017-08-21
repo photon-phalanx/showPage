@@ -1,11 +1,13 @@
 <template>
-  <div class="board" v-show="list.length">
-    <div class="content-wrapper" :class="{reverse: reverseFlag}">
-      <div class="text-wrapper" :style="{transform: scrollOffset}">
-        <div class="text" v-for="(item, index) in list">{{item[1]}}</div>
+  <transition name="fade">
+    <div class="board" v-show="list.length">
+      <div class="content-wrapper" :class="{reverse: reverseFlag}">
+        <div class="text-wrapper" :style="{transform: scrollOffset}">
+          <div class="text" v-for="(item, index) in list">{{item[1]}}</div>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script type="text/ecmascript-6">
@@ -64,6 +66,14 @@
 <style scoped lang="scss" type="text/scss" rel="stylesheet/scss">
   @import "~common/scss/variable";
   @import "~common/scss/mixin";
+
+  .fade-enter-active {
+    transition: all 0.4s linear;
+  }
+
+  .fade-enter {
+    opacity: 0;
+  }
 
   .board {
     width: 150px;
