@@ -57,8 +57,9 @@
             })
             this.boardList = boardList
             this.dataProps = arr
+            this.getProgressData()
           })
-        }, 20)
+        }, 5000)
       }
     },
     components: {

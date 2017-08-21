@@ -25,10 +25,12 @@
     },
     methods: {
       getAverageData () {
-        axios.get('/api/getAverageData').then((res) => {
-          console.log(res.data)
-          this.percent = res.data.i
-        })
+        setTimeout(() => {
+          axios.get('/api/getAverageData').then((res) => {
+            this.percent = res.data.i
+            this.getAverageData()
+          })
+        }, 5000)
       }
     },
     components: {}
@@ -40,6 +42,7 @@
   @import "~common/scss/mixin";
   .progressing-bar-wrapper {
     .img-hidden-wrapper {
+      transition: width 5s linear;
       overflow-x: hidden;
       .img {
         // width: 100%;
