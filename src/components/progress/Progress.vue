@@ -29,6 +29,9 @@
         boardList: []
       }
     },
+    created () {
+      this.timer = null
+    },
     mounted () {
       this.getProgressData()
     },
@@ -38,7 +41,7 @@
         return {left: i * PROGRESS_WIDTH / 10 + 138 + 'px'}
       },
       getProgressData () {
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           axios.get('/api/getProgressData').then((res) => {
             let arr = res.data.data
             let boardList = []
@@ -50,9 +53,10 @@
             })
             arr.forEach((item) => {
               let progress = item[2]
-              for (let i = 1; i * 10 <= progress; i++) {
-                if (!boardList[i - 1]) boardList[i - 1] = []
-                boardList[i - 1].push(item)
+              let index = Math.floor(progress / 10) - 1
+              if (index >= 0) {
+                if (!boardList[index]) boardList[index] = []
+                boardList[index].push(item)
               }
             })
             this.boardList = boardList
