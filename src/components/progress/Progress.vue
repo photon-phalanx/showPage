@@ -1,8 +1,5 @@
 <template>
   <div class="progress">
-    <div class="container">
-      <my-title title="进度"></my-title>
-    </div>
     <div class="progress-bar-wrapper">
       <img src="./totalProgress.png" class="img"/>
       <progressing-bar class="progressing-bar"></progressing-bar>
@@ -17,7 +14,6 @@
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  import MyTitle from 'base/my-title/MyTitle'
   import Flag from 'base/flag/Flag'
   import Board from 'base/board/Board'
   import ProgressingBar from 'base/progressing-bar/ProgressingBar'
@@ -41,33 +37,32 @@
         return {left: i * PROGRESS_WIDTH / 10 + 138 + 'px'}
       },
       getProgressData () {
-        this.timer = setTimeout(() => {
-          axios.get('/api/getProgressData').then((res) => {
-            let arr = res.data.data
-            let boardList = []
-            arr.forEach((item) => {
-              item[2] = parseInt(item[2])
-            })
-            arr.sort((a, b) => {
-              return b - a
-            })
-            arr.forEach((item) => {
-              let progress = item[2]
-              let index = Math.floor(progress / 10) - 1
-              if (index >= 0) {
-                if (!boardList[index]) boardList[index] = []
-                boardList[index].push(item)
-              }
-            })
-            this.boardList = boardList
-            this.dataProps = arr
-            this.getProgressData()
+        axios.get('/api/getProgressData').then((res) => {
+          let arr = res.data.data
+          let boardList = []
+          arr.forEach((item) => {
+            item[2] = parseInt(item[2])
           })
-        }, 5000)
+          arr.sort((a, b) => {
+            return b - a
+          })
+          arr.forEach((item) => {
+            let progress = item[2]
+            let index = Math.floor(progress / 10) - 1
+            if (index >= 0) {
+              if (!boardList[index]) boardList[index] = []
+              boardList[index].push(item)
+            }
+          })
+          this.boardList = boardList
+          this.dataProps = arr
+          this.timer = setTimeout(() => {
+            this.getProgressData()
+          }, 5000)
+        })
       }
     },
     components: {
-      MyTitle,
       Flag,
       Board,
       ProgressingBar
@@ -80,21 +75,15 @@
   @import "~common/scss/mixin";
 
   .progress {
-    position: fixed;
-    width: 1366px;
+    width: 100%;
     height: 100%;
-    top: 0;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
-    background: url(../../assets/bg.jpg);
-    background-size: cover;
     .progress-bar-wrapper {
       position: absolute;
       width: 100%;
       box-sizing: border-box;
       padding: 0 50px 0 70px;
       height: 200px;
-      top: 50%;
+      top: 60%;
       left: 0;
       transform: translate3d(0, -50%, 0);
       .img {

@@ -1,38 +1,99 @@
 <template>
-  <div class="rank">
-    <div class="container">
-      <my-title title="排行榜"></my-title>
-    </div>
-    <div class="list-container">
-      <transition-group name="flip-list">
-        <div v-for="i in testArr" :key="i" class="item">
-          {{i}}
+  <div class="rank" ref="rank">
+    <div class="content-wrapper" ref="contentWrapper">
+      <div class="title">
+        <span class="tab">名次</span>
+        <span class="tab">战队名</span>
+        <span class="tab">LOGO</span>
+        <span class="tab">解题数量</span>
+        <span class="tab line-large">末次时间</span>
+        <span class="tab">分数</span>
+      </div>
+      <div class="visible" ref="visible">
+        <div class="item-wrapper" :style="{transform: calcCurrentPos}">
+          <transition-group name="flip-list">
+            <div class="item" v-for="(item, index) in list" :key="item[0]">
+              <span class="tab">{{index + 1}}</span>
+              <span class="tab">{{item[0]}}</span>
+              <span class="tab"><img :src="item[1] || defaultAvatar" class="avatar"/></span>
+              <span class="tab">{{item[2]}}</span>
+              <span class="tab line-large">{{serializeDate(item[3])}}</span>
+              <span class="tab">{{item[4]}}</span>
+            </div>
+          </transition-group>
         </div>
-      </transition-group>
+      </div>
+      <div class="triangle triangle-up" @click="pageDown()" v-show="currentPage !== 0"></div>
+      <div class="triangle triangle-down" @click="pageUp()" v-show="(currentPage + 1) * pageLen < list.length"></div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import MyTitle from 'base/my-title/MyTitle'
+  import {serializeDate} from 'common/js/util'
   export default {
     data () {
       return {
-        list: [],
+        list: [[1, '', 1, new Date().valueOf(), 2500], [2, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
+          [3, '', 1, new Date().valueOf(), 2500]],
         defaultAvatar: require('./defaultAvatar.png'),
-        columnWidth: '100%',
-        testArr: [1, 2, 3, 4, 5]
+        pageLen: 0,
+        currentPage: 0,
+        visibleHeight: 0
       }
     },
     mounted () {
-      setTimeout(() => {
-        this.change()
-      }, 5000)
+      this.initVisibleHeight()
     },
     props: {},
     methods: {
-      change () {
-        this.testArr = [1, 2, 3, 5, 4]
+      serializeDate (time) {
+        return serializeDate(time, 'YYYY/MM/DD hh:mm:ss')
+      },
+      initVisibleHeight () {
+        console.log(this.$refs)
+        let height = this.$refs.rank.clientHeight
+        this.pageLen = Math.floor(height / 40) - 2
+        this.visibleHeight = this.pageLen * 40
+        this.$refs.contentWrapper.style.height = this.visibleHeight + 40 + 'px'
+        this.$refs.visible.style.height = this.visibleHeight + 'px'
+      },
+      pageUp () {
+        if ((this.currentPage + 1) * this.pageLen > this.list.length) return
+        this.currentPage++
+      },
+      pageDown () {
+        if (this.currentPage === 0) return
+        this.currentPage--
+      }
+    },
+    watch: {
+      list (newVal, oldVal) {
+        if (newVal.length !== oldVal.length) this.currentPage = 0
+      }
+    },
+    computed: {
+      calcCurrentPos () {
+        let pageHeight = this.visibleHeight
+        let offsetHeight = this.currentPage * pageHeight
+        return `translate3d(0, ${-offsetHeight}px, 0)`
       }
     },
     components: {
@@ -50,22 +111,67 @@
   }
 
   .rank {
-    position: fixed;
-    width: 1366px;
+    width: 100%;
     height: 100%;
-    top: 0;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
-    background: url(../../assets/bg.jpg);
-    background-size: cover;
-    .list-container {
-      .item {
-        width: 100%;
-        height: 30px;
-        background-color: red;
-        &:nth-child(2n+1) {
-          background-color: #66ccff;
+    .content-wrapper {
+      position: relative;
+      width: 1100px;
+      margin: 0 auto;
+      background-color: $container-bg-alpha;
+      font-size: 0;
+      font-weight: bold;
+      .tab {
+        font-size: 22px;
+        line-height: 40px;
+        height: 40px;
+        display: inline-block;
+        box-sizing: border-box;
+        width: 15%;
+        text-align: center;
+        color: $color-blue;
+        @include no-wrap();
+      }
+      .line-large {
+        width: 25%;
+      }
+      .visible {
+        height: 400px;
+        overflow: hidden;
+        .item-wrapper {
+          transition: all 1s linear;
+          .item {
+            .tab {
+              color: #fff;
+              .avatar {
+                height: 80%;
+                width: auto;
+                border-radius: 50%;
+                padding-top: 4px;
+              }
+            }
+            &:nth-child(odd) {
+              background-color: $line-bg-alpha;
+            }
+          }
         }
+      }
+      .triangle {
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 20px solid $color-blue;
+      }
+      .triangle-up {
+        position: absolute;
+        top: 50px;
+        left: 0;
+      }
+      .triangle-down {
+        position: absolute;
+        transform: rotate(180deg);
+        bottom: 10px;
+        left: 0;
       }
     }
   }
