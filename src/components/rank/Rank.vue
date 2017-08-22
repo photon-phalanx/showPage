@@ -35,24 +35,7 @@
   export default {
     data () {
       return {
-        list: [[1, '', 1, new Date().valueOf(), 2500], [2, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500],
-          [3, '', 1, new Date().valueOf(), 2500]],
+        list: [[1, '', 1, new Date().valueOf(), 2500], [2, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500]],
         defaultAvatar: require('./defaultAvatar.png'),
         pageLen: 0,
         currentPage: 0,
@@ -68,7 +51,6 @@
         return serializeDate(time, 'YYYY/MM/DD hh:mm:ss')
       },
       initVisibleHeight () {
-        console.log(this.$refs)
         let height = this.$refs.rank.clientHeight
         this.pageLen = Math.floor(height / 40) - 2
         this.visibleHeight = this.pageLen * 40
