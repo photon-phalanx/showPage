@@ -16,20 +16,18 @@
   export default {
     data () {
       return {
-        deadline: 1503554478857,
         bitArr: []
       }
     },
     mounted () {
+      console.log('counter has been mounted or activated')
       this.startCountDown()
     },
     props: {
-      /*
-       deadline: {
-       type: Date,
-       required: true
-       }
-       */
+      deadline: {
+        type: Number,
+        required: true
+      }
     },
     methods: {
       startCountDown () {
@@ -54,55 +52,25 @@
         arr.push(parseInt(second / 10))
         arr.push(second % 10)
         this.bitArr = arr
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           this.startCountDown()
         }, 1000)
       }
     },
     components: {
       DateBit
+    },
+    activated () {
+      this.mounted()
+    },
+    deactivated () {
+      this.beforeDestroy()
+    },
+    beforeDestroy () {
+      clearTimeout(this.timer)
     }
   }
 </script>
-
-<!--
-<script type="text/ecmascript-6">
-  export default {
-    data () {
-      return {
-        deadTime: 0,
-        hour: 0,
-        minute: 0,
-        second: 0
-      }
-    },
-    mounted () {
-      if (this.deadline instanceof Date) this.deadTime = this.deadline.valueOf()
-      else this.deadTime = this.deadline
-      this.updateTime()
-    },
-    props: {
-      deadline: {
-        type: Date,
-        required: true
-      }
-    },
-    methods: {
-      updateTime () {
-        let date = new Date().valueOf()
-        let delta = date - this.deadTime
-        this.hour = Math.floor(delta / 1000 / 60 / 60)
-        this.minute = Math.floor(delta / 1000 / 60) % 60
-        this.second = Math.floor(delta / 1000) % 60
-        setTimeout(() => {
-          this.updateTime()
-        }, 1000)
-      }
-    },
-    components: {}
-  }
-</script>
--->
 
 <style scoped lang="scss" type="text/scss" rel="stylesheet/scss">
   @import "~common/scss/variable";

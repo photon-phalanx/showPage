@@ -61,6 +61,9 @@
     0% {
       transform: rotateX(0);
     }
+    80% {
+      transform: rotateX(-90deg);
+    }
     100% {
       transform: rotateX(-90deg);
     }
@@ -76,7 +79,7 @@
   }
 
   .rotateTop {
-    animation: rotateTop 0.4s linear;
+    animation: rotateTop 0.5s linear;
   }
 
   .rotateBottom {

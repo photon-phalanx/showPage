@@ -1,6 +1,9 @@
 <template>
   <div class="rank" ref="rank">
     <div class="content-wrapper" ref="contentWrapper">
+      <div class="countdown-wrapper">
+        <count-down :deadline="deadline"></count-down>
+      </div>
       <div class="title">
         <span class="tab">名次</span>
         <span class="tab">战队名</span>
@@ -31,6 +34,7 @@
 
 <script type="text/ecmascript-6">
   import MyTitle from 'base/my-title/MyTitle'
+  import CountDown from 'base/count-down/countDown'
   import {serializeDate} from 'common/js/util'
   export default {
     data () {
@@ -39,7 +43,8 @@
         defaultAvatar: require('./defaultAvatar.png'),
         pageLen: 0,
         currentPage: 0,
-        visibleHeight: 0
+        visibleHeight: 0,
+        deadline: new Date().getTime() + 10000000
       }
     },
     mounted () {
@@ -79,7 +84,8 @@
       }
     },
     components: {
-      MyTitle
+      MyTitle,
+      CountDown
     }
   }
 </script>
@@ -102,6 +108,13 @@
       background-color: $container-bg-alpha;
       font-size: 0;
       font-weight: bold;
+      .countdown-wrapper {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        width: 900px;
+        transform: translate3d(-50%, 0, 0) scale(0.2);
+      }
       .tab {
         font-size: 22px;
         line-height: 40px;
