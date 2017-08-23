@@ -1,7 +1,7 @@
 <template>
   <div class="battlefield-wrapper" ref="battlefieldWrapper">
     <div class="battlefield" ref="battlefield">
-      <div class="title-wrapper">
+      <div class="title-wrapper" :style="{transform: horizontalOffset}">
         <span class="team-name"></span>
         <span class="visible-horizontal">
         <span class="question-wrapper">
@@ -10,21 +10,21 @@
       </span>
       </div>
       <div class="visible-vertical" ref="visibleVertical">
-        <div class="team-wrapper">
+        <div class="team-wrapper" :style="{transform: verticalOffset}">
           <div class="team" v-for="(team, index) in list">
             <span class="team-name">123</span>
             <span class="visible-horizontal">
-              <span class="question-wrapper">
+              <span class="question-wrapper" :style="{transform: horizontalOffset}">
                 <span class="question" v-for="question in team"><img :src="choosePic(question)" class="resolve"/></span>
               </span>
             </span>
           </div>
-        </div>
+        </div :>
       </div>
       <div class="triangle triangle-up" @click="pageDown()" v-show="currentPage !== 0"></div>
-      <div class="triangle triangle-down" @click="pageUp()"></div>
+      <div class="triangle triangle-down" @click="pageUp()" v-show="(currentPage + 1) * pageLen < list.length"></div>
       <div class="triangle triangle-left" @click="pageLeft()" v-show="currentHorizontalPage !== 0"></div>
-      <div class="triangle triangle-right" @click="pageRight()"></div>
+      <div class="triangle triangle-right" @click="pageRight()" v-show="(currentHorizontalPage + 1) * 18 < totalNumber"></div>
     </div>
   </div>
 </template>
@@ -34,14 +34,31 @@
     data () {
       return {
         // 总题数,
-        list: [[0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1], [0, 1, 1, 1, 1, 2, 3, 1, 4, 1]
+        list: [[0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
+          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1]
         ],
-        totalNumber: 10,
+        totalNumber: 20,
         horizontalScrollWidth: 1080,
         pageLen: 0,
         visibleHeight: 0,
@@ -80,7 +97,7 @@
         }
       },
       pageUp () {
-        if ((this.currentPage + 1) * this.pageLen > this.list.length) return
+        if ((this.currentPage + 1) * this.pageLen >= this.list.length) return
         this.currentPage++
       },
       pageDown () {
@@ -92,8 +109,16 @@
         this.currentHorizontalPage--
       },
       pageRight () {
-        if ((this.currentHorizontalPage + 1) * 18 > this.totalNumber) return
+        if ((this.currentHorizontalPage + 1) * 18 >= this.totalNumber) return
         this.currentHorizontalPage++
+      }
+    },
+    computed: {
+      verticalOffset () {
+        return `translate3d(0, ${-this.currentPage * this.pageLen * 50}px, 0)`
+      },
+      horizontalOffset () {
+        return `translate3d(${-this.horizontalScrollWidth * this.currentHorizontalPage}px, 0, 0)`
       }
     },
     components: {}
@@ -175,6 +200,9 @@
       }
       .team-wrapper {
         @include no-wrap();
+      }
+      .team-wrapper, .question-wrapper, .title-wrapper {
+        transition: all 1s linear;
       }
       .visible-vertical {
         overflow: hidden;
