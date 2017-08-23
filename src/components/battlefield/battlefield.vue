@@ -1,10 +1,10 @@
 <template>
   <div class="battlefield-wrapper" ref="battlefieldWrapper">
     <div class="battlefield" ref="battlefield">
-      <div class="title-wrapper" :style="{transform: horizontalOffset}">
+      <div class="title-wrapper">
         <span class="team-name"></span>
         <span class="visible-horizontal">
-        <span class="question-wrapper">
+        <span class="question-wrapper" :style="{transform: horizontalOffset}">
           <span class="question" v-for="i in totalNumber"><span class="number">{{i}}</span></span>
         </span>
       </span>
@@ -19,7 +19,7 @@
               </span>
             </span>
           </div>
-        </div :>
+        </div>
       </div>
       <div class="triangle triangle-up" @click="pageDown()" v-show="currentPage !== 0"></div>
       <div class="triangle triangle-down" @click="pageUp()" v-show="(currentPage + 1) * pageLen < list.length"></div>
@@ -201,7 +201,10 @@
       .team-wrapper {
         @include no-wrap();
       }
-      .team-wrapper, .question-wrapper, .title-wrapper {
+      .question-wrapper {
+        display: inline-block;
+      }
+      .team-wrapper, .question-wrapper {
         transition: all 1s linear;
       }
       .visible-vertical {
