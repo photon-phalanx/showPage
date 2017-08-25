@@ -13,18 +13,19 @@
       </div>
       <div class="visible-vertical" ref="visibleVertical">
         <div class="team-wrapper" :style="{transform: verticalOffset}">
-          <div class="team" v-for="(team, index) in list">
-            <span class="team-name">123</span>
+          <div class="team" v-for="(team, index) in game_user_list">
+            <span class="team-name">{{team.user_name}}</span>
             <span class="visible-horizontal">
               <span class="question-wrapper" :style="{transform: horizontalOffset}">
-                <span class="question" v-for="question in team"><img :src="choosePic(question)" class="resolve"/></span>
+                <span class="question" v-for="question in team.answerList"><img :src="choosePic(question)" class="resolve"/></span>
               </span>
             </span>
           </div>
         </div>
       </div>
       <div class="triangle triangle-up" @click="pageDown()" v-show="currentPage !== 0"></div>
-      <div class="triangle triangle-down" @click="pageUp()" v-show="(currentPage + 1) * pageLen < list.length"></div>
+      <div class="triangle triangle-down" @click="pageUp()"
+           v-show="(currentPage + 1) * pageLen < game_user_list.length"></div>
       <div class="triangle triangle-left" @click="pageLeft()" v-show="currentHorizontalPage !== 0"></div>
       <div class="triangle triangle-right" @click="pageRight()"
            v-show="(currentHorizontalPage + 1) * 18 < game_problem_list.length"></div>
@@ -39,30 +40,7 @@
     data () {
       return {
         // 总题数,
-        list: [[0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
-          [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1]
-        ],
+        game_user_list: [],
         game_problem_list: [],
         horizontalScrollWidth: 1080,
         pageLen: 0,
@@ -96,7 +74,50 @@
         axios.get('/api/getBattle').then((res) => {
           console.log(res.data)
           this.game_problem_list = res.data.game_problem_list
+          this.game_user_list = this.dealUserList(res.data.game_user_list)
         })
+      },
+      dealUserList (list) {
+        let resArr = []
+        list.forEach((item) => {
+          let obj = {}
+          obj.id = item.id
+          obj.user_name = item.user_name
+          obj.answerList = this.initAnswerData(item.game_problem_record_problem_id, this.game_problem_list.length)
+          let updateList = this.getUpdateList(item.game_problem_result, item.game_problem_record_problem_id)
+          obj.answerList = this.answerDataAddRank(obj.answerList, updateList)
+          resArr.push(obj)
+        })
+        return resArr
+      },
+      initAnswerData (list, length) {
+        let arr = []
+        for (let i = 0; i < length; i++) arr[i] = 0
+        list.forEach((item) => {
+          let index = this.game_problem_list.findIndex((it) => { return it.id === item })
+          arr[index] = 5
+        })
+        return arr
+      },
+      getUpdateList (resultList, idList) {
+        let resArr = []
+        resultList.forEach((item, index) => {
+          if (item !== 'right') {
+            let type
+            if (item === 'addtional-first') type = 1
+            else if (item === 'addtional-second') type = 2
+            else type = 3
+            resArr.push({id: idList[index], type: type})
+          }
+        })
+        return resArr
+      },
+      answerDataAddRank (list, updateList) {
+        updateList.forEach((item) => {
+          let index = this.game_problem_list.findIndex((it) => { return it.id === item.id })
+          list[index] = item.type
+        })
+        return list
       },
       mouseover (index) {
         const el = this.$refs.questionTitle[index]
