@@ -15,13 +15,13 @@
       <div class="visible" ref="visible">
         <div class="item-wrapper" :style="{transform: calcCurrentPos}">
           <transition-group name="flip-list">
-            <div class="item" v-for="(item, index) in list" :key="item[0]">
+            <div class="item" v-for="(item, index) in list" :key="item.id">
               <span class="tab">{{index + 1}}</span>
-              <span class="tab">{{item[0]}}</span>
-              <span class="tab"><img :src="item[1] || defaultAvatar" class="avatar"/></span>
-              <span class="tab">{{item[2]}}</span>
-              <span class="tab line-large">{{serializeDate(item[3])}}</span>
-              <span class="tab">{{item[4]}}</span>
+              <span class="tab">{{item.user_name}}</span>
+              <span class="tab"><img :src="item.avatar || defaultAvatar" class="avatar" @error="handleError($event)"/></span>
+              <span class="tab">{{item.game_problem_record}}</span>
+              <span class="tab line-large">{{serializeDate(item.last_answer)}}</span>
+              <span class="tab">{{item.game_user_score}}</span>
             </div>
           </transition-group>
         </div>
@@ -36,10 +36,13 @@
   import MyTitle from 'base/my-title/MyTitle'
   import CountDown from 'base/count-down/countDown'
   import {serializeDate} from 'common/js/util'
+  import axios from 'axios'
+  import {tabMixin} from 'common/js/mixins'
+
   export default {
     data () {
       return {
-        list: [[1, '', 1, new Date().valueOf(), 2500], [2, '', 1, new Date().valueOf(), 2500], [3, '', 1, new Date().valueOf(), 2500]],
+        list: [],
         defaultAvatar: require('./defaultAvatar.png'),
         pageLen: 0,
         currentPage: 0,
@@ -47,8 +50,10 @@
         deadline: new Date().getTime() + 10000000
       }
     },
+    mixins: [tabMixin],
     mounted () {
       this.initVisibleHeight()
+      this.getRank()
     },
     props: {},
     methods: {
@@ -61,6 +66,19 @@
         this.visibleHeight = this.pageLen * 40
         this.$refs.contentWrapper.style.height = this.visibleHeight + 40 + 'px'
         this.$refs.visible.style.height = this.visibleHeight + 'px'
+      },
+      handleError (e) {
+        e.target.src = this.defaultAvatar
+      },
+      getRank () {
+        axios.get('/api/getRank').then((res) => {
+          this.list = res.data
+          this.timer = setTimeout(() => {
+            this.getRank()
+          }, 5000)
+        }).catch(() => {
+          this.getRank()
+        })
       },
       pageUp () {
         if ((this.currentPage + 1) * this.pageLen > this.list.length) return

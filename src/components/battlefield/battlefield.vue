@@ -1,11 +1,13 @@
 <template>
   <div class="battlefield-wrapper" ref="battlefieldWrapper">
+    <div class="prompt-box" v-show="promptShowFlag" :style="promptPos">{{title}}</div>
     <div class="battlefield" ref="battlefield">
       <div class="title-wrapper">
         <span class="team-name"></span>
         <span class="visible-horizontal">
         <span class="question-wrapper" :style="{transform: horizontalOffset}">
-          <span class="question" v-for="i in totalNumber"><span class="number">{{i}}</span></span>
+  <span class="question" v-for="(item, index) in game_problem_list" @mouseover="mouseover(index)" @mouseout="mouseout()"
+        ref="questionTitle"><span class="number">{{index + 1}}</span></span>
         </span>
       </span>
       </div>
@@ -24,12 +26,15 @@
       <div class="triangle triangle-up" @click="pageDown()" v-show="currentPage !== 0"></div>
       <div class="triangle triangle-down" @click="pageUp()" v-show="(currentPage + 1) * pageLen < list.length"></div>
       <div class="triangle triangle-left" @click="pageLeft()" v-show="currentHorizontalPage !== 0"></div>
-      <div class="triangle triangle-right" @click="pageRight()" v-show="(currentHorizontalPage + 1) * 18 < totalNumber"></div>
+      <div class="triangle triangle-right" @click="pageRight()"
+           v-show="(currentHorizontalPage + 1) * 18 < game_problem_list.length"></div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import {tabMixin} from 'common/js/mixins'
+  import axios from 'axios'
   export default {
     data () {
       return {
@@ -58,7 +63,7 @@
           [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1],
           [0, 1, 1, 1, 1, 2, 3, 1, 4, 1, 0, 1, 1, 1, 1, 2, 3, 1, 4, 1]
         ],
-        totalNumber: 20,
+        game_problem_list: [],
         horizontalScrollWidth: 1080,
         pageLen: 0,
         visibleHeight: 0,
@@ -67,12 +72,17 @@
         firstPic: require('./first.png'),
         secondPic: require('./second.png'),
         thirdPic: require('./third.png'),
-        finishPic: require('./finish.png')
+        finishPic: require('./finish.png'),
+        promptShowFlag: false,
+        promptPos: {},
+        title: ''
       }
     },
     mounted () {
       this.initVisibleHeight()
+      this.getData()
     },
+    mixins: [tabMixin],
     props: {},
     methods: {
       initVisibleHeight () {
@@ -81,6 +91,28 @@
         this.visibleHeight = this.pageLen * 50
         this.$refs.battlefield.style.height = this.visibleHeight + 50 + 'px'
         this.$refs.visibleVertical.style.height = this.visibleHeight + 'px'
+      },
+      getData () {
+        axios.get('/api/getBattle').then((res) => {
+          console.log(res.data)
+          this.game_problem_list = res.data.game_problem_list
+        })
+      },
+      mouseover (index) {
+        const el = this.$refs.questionTitle[index]
+        this.title = this.game_problem_list[index].problem_name
+        const cn = this.title.match(/[^\x00-\x80]/g)
+        const cnLength = cn ? cn.length : 0
+        const realWidth = cnLength * 22 + (this.title.length - cnLength) * 11
+        const {left, width} = el.getBoundingClientRect()
+        const windowWidth = window.innerWidth
+        if (left + realWidth + 40 <= windowWidth - 50) this.promptPos = {left: left - width + 'px'}
+        else this.promptPos = {left: left - realWidth - 40 + 'px'}
+        this.promptShowFlag = true
+      },
+      mouseout () {
+        this.promptShowFlag = false
+        this.title = ''
       },
       choosePic (question) {
         // 这里的都是测试数据,因为不知道具体情况
@@ -132,6 +164,19 @@
   .battlefield-wrapper {
     width: 100%;
     height: 100%;
+    position: relative;
+    .prompt-box {
+      position: absolute;
+      background-color: rgba(7, 17, 27, 0.6);
+      border: 1px solid rgba(7, 17, 27, 0.7);
+      color: #fff;
+      height: 40px;
+      line-height: 40px;
+      font-size: 22px;
+      padding: 0 20px;
+      width: auto;
+      top: -50px;
+    }
     .battlefield {
       position: relative;
       background-color: $container-bg-alpha;

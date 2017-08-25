@@ -24,7 +24,8 @@ var app = express()
 
 // start
 var router = express.Router()
-
+var data = require('./data')
+var battleData = require('./battleData')
 var t = 10;
 
 router.get('/getProgressData', function (req, res) {
@@ -36,6 +37,14 @@ router.get('/getProgressData', function (req, res) {
 router.get('/getAverageData', function (req, res) {
   t+=2
   res.json({i: t})
+})
+
+router.get('/getRank', function (req, res) {
+  res.json(data)
+})
+
+router.get('/getBattle', function (req, res) {
+  res.json(battleData)
 })
 
 app.use('/api', router)
