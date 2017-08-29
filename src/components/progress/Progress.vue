@@ -17,6 +17,7 @@
   import Flag from 'base/flag/Flag'
   import Board from 'base/board/Board'
   import {tabMixin} from 'common/js/mixins'
+  import {axiosPath} from 'common/js/config'
   import ProgressingBar from 'base/progressing-bar/ProgressingBar'
   const PROGRESS_WIDTH = '1175'
   export default {
@@ -40,7 +41,7 @@
         return {left: i * PROGRESS_WIDTH / 10 + 138 + 'px'}
       },
       getProgressData () {
-        axios.get('/api/getProgress').then((res) => {
+        axios.get(axiosPath + 'getProgress').then((res) => {
           let arr = res.data.data
           let boardList = []
           arr.forEach((item) => {

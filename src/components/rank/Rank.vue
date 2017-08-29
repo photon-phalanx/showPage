@@ -36,6 +36,7 @@
   import MyTitle from 'base/my-title/MyTitle'
   import CountDown from 'base/count-down/countDown'
   import {serializeDate} from 'common/js/util'
+  import {axiosPath} from 'common/js/config'
   import axios from 'axios'
   import {tabMixin} from 'common/js/mixins'
 
@@ -71,7 +72,7 @@
         e.target.src = this.defaultAvatar
       },
       getRank () {
-        axios.get('/api/getRank').then((res) => {
+        axios.get(axiosPath + 'getRank').then((res) => {
           this.list = res.data
           this.timer = setTimeout(() => {
             this.getRank()

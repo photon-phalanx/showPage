@@ -35,6 +35,7 @@
 
 <script type="text/ecmascript-6">
   import {tabMixin} from 'common/js/mixins'
+  import {axiosPath} from 'common/js/config'
   import axios from 'axios'
   export default {
     data () {
@@ -71,7 +72,7 @@
         this.$refs.visibleVertical.style.height = this.visibleHeight + 'px'
       },
       getData () {
-        axios.get('/api/getBattle').then((res) => {
+        axios.get(axiosPath + 'getBattle').then((res) => {
           console.log(res.data)
           this.game_problem_list = res.data.game_problem_list
           this.game_user_list = this.dealUserList(res.data.game_user_list)
