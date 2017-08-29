@@ -7,31 +7,28 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from 'axios'
+  import {tabMixin} from 'common/js/mixins'
   export default {
     data () {
       return {
-        percent: 0
+      }
+    },
+    props: {
+      process: {
+        type: Number,
+        default: 0
       }
     },
     computed: {
       calShowWidth () {
-        if (this.percent === 0) return 0
-        return this.percent * 1192 / 100 + 5 + 'px'
+        if (this.process === 0) return 0
+        return this.process * 1192 + 5 + 'px'
       }
     },
+    mixins: [tabMixin],
     mounted () {
-      this.getAverageData()
     },
     methods: {
-      getAverageData () {
-        setTimeout(() => {
-          axios.get('/api/getAverageData').then((res) => {
-            this.percent = res.data.i
-            this.getAverageData()
-          })
-        }, 5000)
-      }
     },
     components: {}
   }

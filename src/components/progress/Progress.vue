@@ -2,7 +2,7 @@
   <div class="progress">
     <div class="progress-bar-wrapper">
       <img src="./totalProgress.png" class="img"/>
-      <progressing-bar class="progressing-bar"></progressing-bar>
+      <progressing-bar class="progressing-bar" :process="process"></progressing-bar>
       <div class="flag-wrapper" v-if="dataProps.length">
         <flag class="flag" v-for="(item, index) in dataProps" :index="index" :detail="item" :key="item[0]"></flag>
       </div>
@@ -16,13 +16,15 @@
   import axios from 'axios'
   import Flag from 'base/flag/Flag'
   import Board from 'base/board/Board'
+  import {tabMixin} from 'common/js/mixins'
   import ProgressingBar from 'base/progressing-bar/ProgressingBar'
   const PROGRESS_WIDTH = '1175'
   export default {
     data () {
       return {
-        dataProps: [[1, 0, 0], [2, 0, 100], [3, 0, 15]],
-        boardList: []
+        dataProps: [],
+        boardList: [],
+        process: 0
       }
     },
     created () {
@@ -31,23 +33,24 @@
     mounted () {
       this.getProgressData()
     },
+    mixins: [tabMixin],
     props: {},
     methods: {
       calcBoardPos (i) {
         return {left: i * PROGRESS_WIDTH / 10 + 138 + 'px'}
       },
       getProgressData () {
-        axios.get('/api/getProgressData').then((res) => {
+        axios.get('/api/getProgress').then((res) => {
           let arr = res.data.data
           let boardList = []
           arr.forEach((item) => {
-            item[2] = parseInt(item[2])
+            item[3] = parseInt(item[3])
           })
           arr.sort((a, b) => {
-            return b - a
+            return a[3] - b[3]
           })
           arr.forEach((item) => {
-            let progress = item[2]
+            let progress = item[3]
             let index = Math.floor(progress / 10) - 1
             if (index >= 0) {
               if (!boardList[index]) boardList[index] = []
@@ -56,6 +59,7 @@
           })
           this.boardList = boardList
           this.dataProps = arr
+          this.process = parseFloat(res.data.process)
           this.timer = setTimeout(() => {
             this.getProgressData()
           }, 5000)
