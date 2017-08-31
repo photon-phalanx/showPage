@@ -27,18 +27,6 @@ var router = express.Router()
 var data = require('./data')
 var battleData = require('./battleData')
 var progressData = require('./progressData')
-var t = 10;
-
-router.get('/getProgressData', function (req, res) {
-  res.json({"data":[[1,"\u80e1\u91d1\u5764","0","37%<\/div><\/div>"],[2,"\u90ed\u7d20\u82b3","23","23%<\/div><\/div>"],
-    [3,"\u5e94\u5eb7\u660e",t,"23%<\/div><\/div>"],[4,"\u9648\u6613\u4eac","21","21%<\/div><\/div>"],
-    [5,"\u5f20\u4fca\u6770","19","19%<\/div><\/div>"]]})
-})
-
-router.get('/getAverageData', function (req, res) {
-  t+=2
-  res.json({i: t})
-})
 
 router.get('/getRank', function (req, res) {
   res.json(data)

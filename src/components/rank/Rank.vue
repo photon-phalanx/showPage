@@ -38,7 +38,6 @@
   import {serializeDate} from 'common/js/util'
   import {axiosPath} from 'common/js/config'
   import axios from 'axios'
-  import {tabMixin} from 'common/js/mixins'
 
   export default {
     data () {
@@ -51,10 +50,19 @@
         deadline: new Date().getTime() + 10000000
       }
     },
-    mixins: [tabMixin],
     mounted () {
       this.initVisibleHeight()
       this.getRank()
+    },
+    activated () {
+      this.initVisibleHeight()
+      this.getRank()
+    },
+    deactivated () {
+      clearTimeout(this.timer)
+    },
+    beforeDestroy () {
+      clearTimeout(this.timer)
     },
     props: {},
     methods: {

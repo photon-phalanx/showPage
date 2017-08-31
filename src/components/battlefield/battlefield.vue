@@ -1,6 +1,6 @@
 <template>
   <div class="battlefield-wrapper" ref="battlefieldWrapper">
-    <div class="prompt-box" v-show="promptShowFlag" :style="promptPos">{{title}}</div>
+    <div class="prompt-box" :style="promptPos">{{title}}</div>
     <div class="battlefield" ref="battlefield">
       <div class="title-wrapper">
         <span class="team-name"></span>
@@ -34,7 +34,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {tabMixin} from 'common/js/mixins'
   import {axiosPath} from 'common/js/config'
   import axios from 'axios'
   export default {
@@ -61,7 +60,16 @@
       this.initVisibleHeight()
       this.getData()
     },
-    mixins: [tabMixin],
+    activated () {
+      this.initVisibleHeight()
+      this.getData()
+    },
+    deactivated () {
+      clearTimeout(this.timer)
+    },
+    beforeDestroy () {
+      clearTimeout(this.timer)
+    },
     props: {},
     methods: {
       initVisibleHeight () {
@@ -73,7 +81,6 @@
       },
       getData () {
         axios.get(axiosPath + 'getBattle').then((res) => {
-          console.log(res.data)
           this.game_problem_list = res.data.game_problem_list
           this.game_user_list = this.dealUserList(res.data.game_user_list)
         })
@@ -125,11 +132,15 @@
         this.title = this.game_problem_list[index].problem_name
         const cn = this.title.match(/[^\x00-\x80]/g)
         const cnLength = cn ? cn.length : 0
-        const realWidth = cnLength * 22 + (this.title.length - cnLength) * 11
-        const {left, width} = el.getBoundingClientRect()
+        const realWidth = cnLength * 22 + (this.title.length - cnLength) * 12
+        let {left} = el.getBoundingClientRect()
         const windowWidth = window.innerWidth
-        if (left + realWidth + 40 <= windowWidth - 50) this.promptPos = {left: left - width + 'px'}
-        else this.promptPos = {left: left - realWidth - 40 + 'px'}
+        const delta = (windowWidth - 1366) / 2
+        left = left - delta
+        if (left + realWidth + 40 <= windowWidth - delta - 50) this.promptPos = {left: left - realWidth / 2 + 'px'}
+        else {
+          this.promptPos = {left: left - realWidth + 'px'}
+        }
         this.promptShowFlag = true
       },
       mouseout () {

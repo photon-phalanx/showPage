@@ -16,7 +16,6 @@
   import axios from 'axios'
   import Flag from 'base/flag/Flag'
   import Board from 'base/board/Board'
-  import {tabMixin} from 'common/js/mixins'
   import {axiosPath} from 'common/js/config'
   import ProgressingBar from 'base/progressing-bar/ProgressingBar'
   const PROGRESS_WIDTH = '1175'
@@ -34,7 +33,15 @@
     mounted () {
       this.getProgressData()
     },
-    mixins: [tabMixin],
+    activated () {
+      this.getProgressData()
+    },
+    deactivated () {
+      clearTimeout(this.timer)
+    },
+    beforeDestroy () {
+      clearTimeout(this.timer)
+    },
     props: {},
     methods: {
       calcBoardPos (i) {

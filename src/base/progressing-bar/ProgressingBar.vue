@@ -7,7 +7,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {tabMixin} from 'common/js/mixins'
   export default {
     data () {
       return {
@@ -25,7 +24,6 @@
         return this.process * 1192 + 5 + 'px'
       }
     },
-    mixins: [tabMixin],
     mounted () {
     },
     methods: {

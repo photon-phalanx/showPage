@@ -13,17 +13,23 @@
 
 <script type="text/ecmascript-6">
   import DateBit from 'base/date-bit/dateBit'
-  import {tabMixin} from 'common/js/mixins'
   export default {
     data () {
       return {
         bitArr: []
       }
     },
-    mixins: [tabMixin],
     mounted () {
-      console.log('counter has been mounted or activated')
       this.startCountDown()
+    },
+    activated () {
+      this.startCountDown()
+    },
+    deactivated () {
+      clearTimeout(this.timer)
+    },
+    beforeDestroy () {
+      clearTimeout(this.timer)
     },
     props: {
       deadline: {

@@ -7,7 +7,9 @@
         <router-link :to="{name: 'battlefield'}">战况</router-link>
       </div>
       <div class="router-view-wrapper">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </div>
     </div>
   </div>
