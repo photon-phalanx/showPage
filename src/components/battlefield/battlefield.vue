@@ -83,6 +83,10 @@
         axios.get(axiosPath + 'getBattle').then((res) => {
           this.game_problem_list = res.data.game_problem_list
           this.game_user_list = this.dealUserList(res.data.game_user_list)
+          clearTimeout(this.timer)
+          this.timer = setTimeout(() => {
+            this.getData()
+          }, 10000)
         })
       },
       dealUserList (list) {

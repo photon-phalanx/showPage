@@ -68,9 +68,10 @@
           this.boardList = boardList
           this.dataProps = arr
           this.process = parseFloat(res.data.process)
+          clearTimeout(this.timer)
           this.timer = setTimeout(() => {
             this.getProgressData()
-          }, 5000)
+          }, 10000)
         })
       }
     },

@@ -47,7 +47,7 @@
         pageLen: 0,
         currentPage: 0,
         visibleHeight: 0,
-        deadline: new Date().getTime() + 10000000
+        deadline: 0
       }
     },
     mounted () {
@@ -79,14 +79,29 @@
       handleError (e) {
         e.target.src = this.defaultAvatar
       },
+      sort (data) {
+        return data.sort(function (a, b) {
+          if (a.game_user_score !== b.game_user_score) return b.game_user_score - a.game_user_score
+          else return a.timestamp - b.timestamp
+        })
+      },
+      addTimestamp (data) {
+        data.forEach((item) => {
+          item.timestamp = new Date(item.last_answer)
+        })
+        return data
+      },
       getRank () {
         axios.get(axiosPath + 'getRank').then((res) => {
-          this.list = res.data
+          let data = res.data.game_user
+          data = this.addTimestamp(data)
+          data = this.sort(data)
+          this.list = data
+          this.deadline = parseInt(res.data.end_time)
+          clearTimeout(this.timer)
           this.timer = setTimeout(() => {
             this.getRank()
-          }, 5000)
-        }).catch(() => {
-          this.getRank()
+          }, 10000)
         })
       },
       pageUp () {

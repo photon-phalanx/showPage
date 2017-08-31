@@ -33,8 +33,18 @@
     },
     props: {
       deadline: {
-        type: Number,
-        required: true
+        required: true,
+        default: 0
+      }
+    },
+    watch: {
+      deadline (newVal, oldVal) {
+        console.log('chg')
+        if (newVal === oldVal) return
+        else {
+          clearTimeout(this.timer)
+          this.startCountDown()
+        }
       }
     },
     methods: {
@@ -60,6 +70,7 @@
         arr.push(parseInt(second / 10))
         arr.push(second % 10)
         this.bitArr = arr
+        clearTimeout(this.timer)
         this.timer = setTimeout(() => {
           this.startCountDown()
         }, 1000)
